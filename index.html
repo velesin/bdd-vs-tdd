@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta name="keywords" content="TDD,BDD,testy,specyfikacja" />
+    <meta name="description" content="Testy jednostkowe jako żywa zpecyfikacja kodu." />
+    <title>Żywa specyfikacja</title>
+    <style type="text/css">
+        @font-face {
+          font-family: 'Ubuntu Mono';
+          font-style: normal;
+          font-weight: 400;
+          src: local('Ubuntu Mono'), local('UbuntuMono-Regular'), url(assets/ViZhet7Ak-LRXZMXzuAfkYbN6UDyHWBl620a-IRfuBk.woff) format('woff');
+        }
+        @font-face {
+          font-family: 'Ubuntu Mono';
+          font-style: normal;
+          font-weight: 700;
+          src: local('Ubuntu Mono Bold'), local('UbuntuMono-Bold'), url(assets/ceqTZGKHipo8pJj4molytjqR_3kx9_hJXbbyU8S6IN0.woff) format('woff');
+        }
+        @font-face {
+          font-family: 'Ubuntu Mono';
+          font-style: italic;
+          font-weight: 400;
+          src: local('Ubuntu Mono Italic'), local('UbuntuMono-Italic'), url(assets/KAKuHXAHZOeECOWAHsRKA9kZXW4sYc4BjuAIFc1SXII.woff) format('woff');
+        }
+
+        @font-face {
+            font-family: 'Lato Regular';
+            src: url(assets/Lato-Regular.ttf);
+        }
+
+        @font-face {
+            font-family: 'Ubuntu Medium';
+            src: url(assets/Ubuntu-M.ttf);
+        }
+
+        @font-face {
+            font-family: 'Ubuntu Regular';
+            src: url(assets/Ubuntu-R.ttf);
+        }
+
+        body {
+            font-family: 'Ubuntu Regular';
+            color: #515457;
+        }
+        h1, h2, h3 {
+            font-family: 'Ubuntu Medium';
+            font-weight: 400;
+            margin-bottom: 0;
+            letter-spacing: -0.5px;
+            color: #0f4e8c;
+        }
+        .remark-slide-content h1 { font-size: 3em; }
+        .remark-slide-content h2 { font-size: 1.5em; }
+        .remark-slide-content h3 {
+            font-size: 0.8em;
+            letter-spacing: 0.5px;
+        }
+        .footnote {
+            color: #0f4e8c;
+            font-family: 'Lato Regular';
+            font-weight: bold;
+            font-size: 0.8em;
+            position: relative;
+            top: 14em;
+            text-align: center;
+        }
+        li p { line-height: 1.25em; }
+        .red { color: #da4c4b; }
+        .large { font-size: 2em; }
+        a, a > code {
+            color: rgb(249, 38, 114);
+            text-decoration: none;
+        }
+        code {
+            -moz-border-radius: 5px;
+            -web-border-radius: 5px;
+            background: #e7e8e2;
+            border-radius: 5px;
+        }
+        .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+        .remark-code-line-highlighted     { background-color: #373832; }
+        .pull-left {
+            float: left;
+            width: 47%;
+        }
+        .pull-right {
+            float: right;
+            width: 47%;
+        }
+        .pull-right ~ p {
+            clear: both;
+        }
+        #slideshow .slide .content code {
+            font-size: 0.8em;
+        }
+        #slideshow .slide .content pre code {
+            font-size: 0.9em;
+            padding: 15px;
+        }
+        .inverse {
+            background: #272822;
+            color: #777872;
+            text-shadow: 0 0 20px #333;
+        }
+        .inverse h1, .inverse h2 {
+            color: #f3f3f3;
+            line-height: 0.8em;
+        }
+
+        /* Slide-specific styling */
+        #slide-inverse .footnote {
+            bottom: 12px;
+            left: 20px;
+        }
+        #slide-how .slides {
+            font-size: 0.9em;
+            position: absolute;
+            top:  151px;
+            right: 140px;
+        }
+        #slide-how .slides h3 {
+            margin-top: 0.2em;
+        }
+        #slide-how .slides .first, #slide-how .slides .second {
+            padding: 1px 20px;
+            height: 90px;
+            width: 120px;
+            -moz-box-shadow: 0 0 10px #777;
+            -webkit-box-shadow: 0 0 10px #777;
+            box-shadow: 0 0 10px #777;
+        }
+        #slide-how .slides .first {
+            background: #fff;
+            position: absolute;
+            top: 20%;
+            left: 20%;
+            z-index: 1;
+        }
+        #slide-how .slides .second {
+            position: relative;
+            background: #fff;
+            z-index: 0;
+        }
+
+        /* Two-column layout */
+        .left-column {
+            color: #777;
+            width: 20%;
+            height: 92%;
+            float: left;
+        }
+        .left-column h2:last-of-type, .left-column h3:last-child {
+            color: #000;
+        }
+        .right-column {
+            width: 75%;
+            float: right;
+            padding-top: 1em;
+        }
+        .right-column.next {
+            margin-top: -3em;
+        }
+
+
+        .remark-slide-number {
+            font-family: 'Lato Regular';
+            font-size: 0.8em;
+            color: #b6cde3;
+        }
+        h3 {
+            font-family: 'Lato Regular';
+            color: #da4c4b;
+        }
+        .remark-slide-content {
+            background: #f1fdff;
+            background: url(assets/itesky_medium.png), radial-gradient(ellipse at center, #fff 0%, #f1fdff 70%);
+            background-repeat: no-repeat;
+            background-position: 3% 97%;
+            background-size: 11%, 100%;
+        }
+        .remark-slide-container:first-of-type .remark-slide-content,
+        .remark-slide-container:last-of-type .remark-slide-content{
+            background: #f1fdff;
+            background: url(assets/itesky_medium.png), radial-gradient(ellipse at center, #fff 0%, #f1fdff 70%);
+            background-repeat: no-repeat;
+            background-position: center 25%;
+            background-size: 20%, 100%;
+        }
+    </style>
+</head>
+<body>
+<textarea id="source">
+layout: true
+class: center, middle
+---
+##BDD vs TDD - czym to się tak naprawdę różni?
+
+###WOJCIECH ZAWISTOWSKI
+
+.footnote[
+www..red[e]SKY.pl
+]
+---
+.left-column[
+]
+.right-column.left[
+## BDD - z czym się kojarzy?
+
+- nowa terminologia
+- nowa składnia
+]
+---
+.left-column[
+]
+.right-column.left[
+##Testy jednostkowe
+
+PHPUnit:
+
+```php
+class MoneyTest extends PHPUnit_Framework_TestCase
+{
+    public function testCanBeNegated()
+    {
+        $a = new Money(1);
+        $b = $a->negate();
+        $this->assertEquals(-1, $b->getAmount());
+    }
+}
+```
+
+PHPSpec:
+
+```php
+class MarkdownSpec extends ObjectBehavior
+{
+    function it_is_initializable()
+    {
+        $this->shouldHaveType('Markdown');
+    }
+}
+```
+]
+---
+.left-column[
+]
+.right-column.left[
+##Testy akceptacyjne
+
+Behat:
+
+```
+Feature: ls
+  In order to see the directory structure
+  As a UNIX user
+  I need to be able to list the current directory's contents
+
+  Scenario:
+    Given I am in a directory "test"
+    And I have a file named "foo"
+    And I have a file named "bar"
+    When I run "ls"
+    Then I should get:
+      """
+      bar
+      foo
+      """
+```
+]
+---
+.left-column[
+]
+.right-column.left[
+## Zamieszanie w "środowisku"
+
+- inny wariant TDD czy nowa metodyka?
+- moda na "DSL-e" czy coś praktycznego
+- czysta kosmetyka, czy nowe podejście
+- krótkotrwała moda czy coś istotnego
+- kwestia gustu / wyglądu czy praktyczne różnice
+- ewolucja TDD czy coś nowego
+- BDD to nadal TDD czy zupełnie inne podejście
+]
+---
+.left-column[
+]
+.right-column.left[
+## Gdzie leży prawdziwa różnica?
+
+"Klasyczne" TDD:
+- skupione na IMPLEMENTACJI
+- testy pogrupowane wg. funkcji API
+
+BDD:
+- skupione na SPECYFIKACJI
+- testy pogrupowane wg. wymagań klienta
+]
+---
+.left-column[
+]
+.right-column.left[
+## Inna filozofia
+
+- składnia nie ma znaczenia
+- można stosować BDD w PHPUnit!
+- można używać PHPSpec i wcale NIE stosować BDD!
+]
+---
+.left-column[
+]
+.right-column.left[
+## Testy akceptacyjne
+
+"Klasyczne" TDD:
+
+```
+Given I have a "milk" and "butter" in my shopping cart
+When I go to the "cart" page
+  And set "butter" amount to "0"
+Then the "items" table contains only "milk"
+```
+
+BDD:
+
+```
+Given I have a "milk" and "butter" in my shopping cart
+When I remove "butter"
+Then the shopping cart contains only "milk"
+```
+]
+---
+.left-column[
+]
+.right-column.left[
+## Testy akceptacyjne
+
+- róznica wyraźnie zauważalna
+- nacisk na cele użytkownika (kupuję, płacę) a nie na interfejs aplikacji (wchodzę na stronę, klikam)
+]
+---
+.left-column[
+]
+.right-column.left[
+## Korzyści są oczywiste
+
+- mniej kruche testy (niezależne od implementacji)
+- weryfikacja spójności wymagań a nie tylko poprawności implementacji
+- podstawa do dyskusji z użytkownikami / ekspertami domenowymi
+]
+
+
+
+
+
+
+
+
+
+
+
+---
+```
+$this->assertFinished($presentation);
+```
+
+## &nbsp;
+---
+.left-column[
+]
+.right-column.left[
+##Grupa eSKY
+
+- Internetowe Biuro Turystyczne.<br>Działamy od 2005 r.
+- Polska, Bułgaria, Rumunia, Brazylia
+- Lider sprzedaży online<br>na wymienionych rynkach
+- Firma polska
+]
+---
+.left-column[
+]
+.right-column.left[
+##IT.eSKY.pl
+
+- Własne rozwiązania technologiczne<br>rozwijane od ponad 8 lat
+- Dział IT złożony z ponad 70 specjalistów
+- Własne rozwiązania infrastrukturalne<br>i serwerowe
+- Pracujemy w oparciu o metodyki Agile<br>(Scrum i Kanban)
+- Dominujące technologie to PHP i .NET
+]
+---
+.left-column[
+]
+.right-column.left[
+##Poszukujemy
+
+- Senior PHP Developera
+- Senior FE Developera
+- Testera aplikacji
+- Projektanta UX
+]
+---
+###DZIĘKUJEMY ZA UWAGĘ
+
+##Zapraszamy kreatywnych ludzi do współpracy<br>www.IT.eSKY.pl
+</textarea>
+<script src="assets/remark.js" type="text/javascript"></script>
+<script type="text/javascript">
+    var slideshow = remark.create({
+        highlightStyle: 'sunburst',
+        highlightLanguage: 'php'
+    });
+</script>
+</body>
+</html>
