@@ -3,8 +3,8 @@
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <meta name="keywords" content="TDD,BDD,testy,specyfikacja" />
-    <meta name="description" content="Testy jednostkowe jako żywa zpecyfikacja kodu." />
-    <title>Żywa specyfikacja</title>
+    <meta name="description" content="BDD vs TDD - jedna kluczowa różnica" />
+    <title>BDD vs TDD</title>
     <style type="text/css">
         @font-face {
           font-family: 'Ubuntu Mono';
@@ -195,12 +195,12 @@
 layout: true
 class: center, middle
 ---
-##BDD vs TDD - czym to się tak naprawdę różni?
+##BDD vs TDD - jedna kluczowa różnica
 
 ###WOJCIECH ZAWISTOWSKI
 
 .footnote[
-www..red[e]SKY.pl
+IT..red[e]SKY.pl
 ]
 ---
 .left-column[
@@ -210,6 +210,32 @@ www..red[e]SKY.pl
 
 - nowa terminologia
 - nowa składnia
+]
+---
+.left-column[
+]
+.right-column.left[
+##Testy akceptacyjne
+
+Behat:
+
+```
+Feature: ls
+  In order to see the directory structure
+  As a UNIX user
+  I need to be able to list the current directory's contents
+
+  Scenario:
+    Given I am in a directory "test"
+    And I have a file named "foo"
+    And I have a file named "bar"
+    When I run "ls"
+    Then I should get:
+      """
+      bar
+      foo
+      """
+```
 ]
 ---
 .left-column[
@@ -247,54 +273,29 @@ class MarkdownSpec extends ObjectBehavior
 .left-column[
 ]
 .right-column.left[
-##Testy akceptacyjne
-
-Behat:
-
-```
-Feature: ls
-  In order to see the directory structure
-  As a UNIX user
-  I need to be able to list the current directory's contents
-
-  Scenario:
-    Given I am in a directory "test"
-    And I have a file named "foo"
-    And I have a file named "bar"
-    When I run "ls"
-    Then I should get:
-      """
-      bar
-      foo
-      """
-```
-]
----
-.left-column[
-]
-.right-column.left[
 ## Zamieszanie w "środowisku"
 
-- inny wariant TDD czy nowa metodyka?
-- moda na "DSL-e" czy coś praktycznego
-- czysta kosmetyka, czy nowe podejście
-- krótkotrwała moda czy coś istotnego
-- kwestia gustu / wyglądu czy praktyczne różnice
-- ewolucja TDD czy coś nowego
-- BDD to nadal TDD czy zupełnie inne podejście
+- inny wariant, ewolucja czy rewolucja?
+- czysta kosmetyka czy nowa metodyka?
+- przejściowa moda czy trwały rozwój?
+- kwestia gustu czy wymierne różnice?
 ]
 ---
 .left-column[
 ]
 .right-column.left[
-## Gdzie leży prawdziwa różnica?
-
-"Klasyczne" TDD:
-- skupione na IMPLEMENTACJI
+## Gdzie leży główna różnica?
+]
+---
+.left-column[
+]
+.right-column.left[
+## TDD:
+- skupione na .red[IMPLEMENTACJI]
 - testy pogrupowane wg. funkcji API
 
-BDD:
-- skupione na SPECYFIKACJI
+## BDD:
+- skupione na .red[SPECYFIKACJI]
 - testy pogrupowane wg. wymagań klienta
 ]
 ---
@@ -349,61 +350,490 @@ Then the shopping cart contains only "milk"
 - weryfikacja spójności wymagań a nie tylko poprawności implementacji
 - podstawa do dyskusji z użytkownikami / ekspertami domenowymi
 ]
-
-
-
-
-
-
-
-
-
-
-
 ---
+.left-column[
+]
+.right-column.left[
+## A co z testami jednostkowymi?
+]
+---
+.left-column[
+]
+.right-column.left[
+## Gra w rzutki (Dart)
+
+- rzut zmniejsza ilość punktów (od 501 do zera)
+- trzeba zejść równo do zera (wynik ujemny nieważny)
+- dla uproszczenia pozostałe reguły pomijamy
+
+```php
+class DartGame {
+
+    public function setPoints() {}
+
+    public function scorePoints() {}
+
+    public function isWin() {}
+}
 ```
-$this->assertFinished($presentation);
+]
+---
+.left-column[
+]
+.right-column.left[
+## TDD
+
+Skupia się na .red[implementacji] (metodach)
+
+```php
+class DartGame_scorePoints_Test {}
+
+class DartGame_isWin_Test {}
+```
+]
+---
+.left-column[
+]
+.right-column.left[
+## TDD
+
+```php
+class DartGame_scorePoints_Test {
+
+*    function setUp() {
+*     $this->game->setPoints(10);
+*    }
+ 
+    function test_update_points_when_scoring() {
+        $this->game->scorePoints(9);
+        $this->assertScoreToEqual(1);
+    }
+
+    function test_update_points_when_scoring_all_remaining(){
+        $this->game->scorePoints(10);
+        $this->assertScoreToEqual(0);
+    }
+
+    function test_do_not_update_points_when_overscoring() {
+        $this->game->scorePoints(11);
+        $this->assertScoreToEqual(10);
+    }
+}
+```
+]
+---
+.left-column[
+]
+.right-column.left[
+## TDD
+
+```php
+class DartGame_scorePoints_Test {
+
+    function setUp() {
+     $this->game->setPoints(10);
+    }
+ 
+*    function test_update_points_when_scoring() {
+*        $this->game->scorePoints(9);
+*        $this->assertScoreToEqual(1);
+*    }
+
+    function test_update_points_when_scoring_all_remaining(){
+        $this->game->scorePoints(10);
+        $this->assertScoreToEqual(0);
+    }
+
+    function test_do_not_update_points_when_overscoring() {
+        $this->game->scorePoints(11);
+        $this->assertScoreToEqual(10);
+    }
+}
+```
+]
+---
+.left-column[
+]
+.right-column.left[
+## TDD
+
+```php
+class DartGame_scorePoints_Test {
+
+    function setUp() {
+     $this->game->setPoints(10);
+    }
+ 
+    function test_update_points_when_scoring() {
+        $this->game->scorePoints(9);
+        $this->assertScoreToEqual(1);
+    }
+
+*    function test_update_points_when_scoring_all_remaining(){
+*        $this->game->scorePoints(10);
+*        $this->assertScoreToEqual(0);
+*    }
+
+    function test_do_not_update_points_when_overscoring() {
+        $this->game->scorePoints(11);
+        $this->assertScoreToEqual(10);
+    }
+}
+```
+]
+---
+.left-column[
+]
+.right-column.left[
+## TDD
+
+```php
+class DartGame_scorePoints_Test {
+
+    function setUp() {
+     $this->game->setPoints(10);
+    }
+ 
+    function test_update_points_when_scoring() {
+        $this->game->scorePoints(9);
+        $this->assertScoreToEqual(1);
+    }
+
+    function test_update_points_when_scoring_all_remaining(){
+        $this->game->scorePoints(10);
+        $this->assertScoreToEqual(0);
+    }
+
+*    function test_do_not_update_points_when_overscoring() {
+*        $this->game->scorePoints(11);
+*        $this->assertScoreToEqual(10);
+*    }
+}
+```
+]
+---
+.left-column[
+]
+.right-column.left[
+## TDD
+
+```php
+class DartGame_isWin_Test {
+
+*    function test_return_false_for_score_greater_than_zero() {
+*        $this->game->setPoints(1);
+*        $this->assertFalse($this->game->isWin());
+*    }
+
+    function test_return_true_for_score_equal_to_zero() {
+        $this->game->setPoints(0);
+        $this->assertTrue($this->game->isWin());
+    }
+}
+```
+]
+---
+.left-column[
+]
+.right-column.left[
+## TDD
+
+```php
+class DartGame_isWin_Test {
+
+    function test_return_false_for_score_greater_than_zero() {
+        $this->game->setPoints(1);
+        $this->assertFalse($this->game->isWin());
+    }
+
+*    function test_return_true_for_score_equal_to_zero() {
+*        $this->game->setPoints(0);
+*        $this->assertTrue($this->game->isWin());
+*    }
+}
+```
+]
+---
+.left-column[
+]
+.right-column.left[
+## TDD
+
+Wydaje się poprawne i przejrzyste, ale...
+]
+---
+.left-column[
+]
+.right-column.left[
+## TDD
+
+```php
+function test_update_points_when_scoring_all_remaining() {
+    $this->game->scorePoints(10);
+    $this->assertScoreToEqual(0);
+}
 ```
 
-## &nbsp;
----
-.left-column[
-]
-.right-column.left[
-##Grupa eSKY
-
-- Internetowe Biuro Turystyczne.<br>Działamy od 2005 r.
-- Polska, Bułgaria, Rumunia, Brazylia
-- Lider sprzedaży online<br>na wymienionych rynkach
-- Firma polska
+Czy rzeczywiście nas obchodzi, czy punkty zostaną wyzerowane? (Czy jedynie, że gra została wygrana?)
 ]
 ---
 .left-column[
 ]
 .right-column.left[
-##IT.eSKY.pl
+## TDD
 
-- Własne rozwiązania technologiczne<br>rozwijane od ponad 8 lat
-- Dział IT złożony z ponad 70 specjalistów
-- Własne rozwiązania infrastrukturalne<br>i serwerowe
-- Pracujemy w oparciu o metodyki Agile<br>(Scrum i Kanban)
-- Dominujące technologie to PHP i .NET
+```php
+function test_return_true_for_score_equal_to_zero() {
+    $this->game->setPoints(0);
+    $this->assertTrue($this->game->isWin());
+}
+```
+
+Czy rzeczywiście wygrywamy, gdy punkty są RÓWNE zero? (Czy raczej gdy SPADNĄ do zera?)
+
+Czy to realistyczne, że wygrywamy USTAWIAJĄC punkty?<br>(Czy raczej powinniśmy testować ZDOBYCIE właściwej ilości punktów?)
 ]
 ---
 .left-column[
 ]
 .right-column.left[
-##Poszukujemy
+## TDD
 
-- Senior PHP Developera
-- Senior FE Developera
-- Testera aplikacji
-- Projektanta UX
+Jak dowiedzieć się, jakie są poprawne "posunięcia" w grze?
+
+Prosta kombinacja wszystkich testów scorePoints i isWin nie daje jasnej odpowiedzi!
 ]
 ---
-###DZIĘKUJEMY ZA UWAGĘ
+.left-column[
+]
+.right-column.left[
+## BDD
 
-##Zapraszamy kreatywnych ludzi do współpracy<br>www.IT.eSKY.pl
+Skupia się na .red[specyfikacji] (przebiegu gry)
+
+```php
+class DartGame_Scoring_Test {}
+
+class DartGame_Overscoring_Test {}
+
+class DartGame_ScoringExactly_Test {}
+```
+]
+---
+.left-column[
+]
+.right-column.left[
+## BDD
+
+```php
+class DartGame_Scoring_Test {
+
+*    function setUp() {
+*        $this->game->setPoints(10);
+*        $this->game->scorePoints(9);
+*    }
+
+    function test_update_points() {
+        $this->assertScoreToEqual(1);
+    }
+
+    function test_do_not_win_yet() {
+        $this->assertFalse($this->game->isWin());
+    }
+}
+```
+]
+---
+.left-column[
+]
+.right-column.left[
+## BDD
+
+```php
+class DartGame_Scoring_Test {
+
+    function setUp() {
+        $this->game->setPoints(10);
+        $this->game->scorePoints(9);
+    }
+
+*    function test_update_points() {
+*        $this->assertScoreToEqual(1);
+*    }
+*
+*    function test_do_not_win_yet() {
+*        $this->assertFalse($this->game->isWin());
+*    }
+}
+```
+]
+---
+.left-column[
+]
+.right-column.left[
+## BDD
+
+```php
+class DartGame_Overscoring_Test {
+
+*    function setUp() {
+*        $this->game->setPoints(10);
+*        $this->game->scorePoints(11);
+*    }
+
+    function test_do_not_update_points() {
+        $this->assertScoreToEqual(10);
+    }
+
+    function test_do_not_win_yet() {
+        $this->assertFalse($this->game->isWin());
+    }
+}
+```
+]
+---
+.left-column[
+]
+.right-column.left[
+## BDD
+
+```php
+class DartGame_Overscoring_Test {
+
+    function setUp() {
+        $this->game->setPoints(10);
+        $this->game->scorePoints(11);
+    }
+
+*    function test_do_not_update_points() {
+*        $this->assertScoreToEqual(10);
+*    }
+*
+*    function test_do_not_win_yet() {
+*        $this->assertFalse($this->game->isWin());
+*    }
+}
+```
+]
+---
+.left-column[
+]
+.right-column.left[
+## BDD
+
+```php
+class DartGame_ScoringExactly_Test {
+
+*    function setUp() {
+*        $this->game->setPoints(10);
+*        $this->game->scorePoints(10);
+*    }
+
+    function test_win_the_game() {
+        $this->assertTrue($this->game->isWin());
+    }
+}
+```
+]
+---
+.left-column[
+]
+.right-column.left[
+## BDD
+
+```php
+class DartGame_ScoringExactly_Test {
+
+    function setUp() {
+        $this->game->setPoints(10);
+        $this->game->scorePoints(10);
+    }
+
+*    function test_win_the_game() {
+*        $this->assertTrue($this->game->isWin());
+*    }
+}
+```
+]
+---
+.left-column[
+]
+.right-column.left[
+## BDD
+
+Czemu tak jest lepiej?
+]
+---
+.left-column[
+]
+.right-column.left[
+## BDD
+
+```php
+class DartGame_ScoringExactly_Test {
+
+    function test_win_the_game() {
+        $this->assertTrue($this->game->isWin());
+    }
+
+    // brak testu związanego z aktualizacją punktów!
+}
+```
+
+Nie obchodzi nas, czy punkty są zerowane czy nie w przypadku wygranej.
+
+(Oczywiście moglibyśmy to sprawdzić, gdyby było takie wymaganie - ale nie zgadujemy!)
+]
+---
+.left-column[
+]
+.right-column.left[
+## BDD
+
+```php
+class DartGame_ScoringExactly_Test {
+
+    function setUp() {
+        ...
+        $this->game->scorePoints(10);
+    }
+
+    function test_win_the_game() {...}
+}
+```
+
+Sprawdzamy realistyczny scenariusz: ZDOBYCIE punktów<br>(a nie ustawienie ich "ręcznie")
+]
+---
+.left-column[
+]
+.right-column.left[
+## BDD
+
+Jak dowiedzieć się, jakie są poprawne "posunięcia" w grze?
+
+Bardzo prosto... patrząc na testy:
+
+```php
+class DartGame_Scoring_Test {}
+
+class DartGame_Overscoring_Test {}
+
+class DartGame_ScoringExactly_Test {}
+```
+]
+
+
+
+
+
+
+
+
+
+
+---
+#IT..red[e]SKY.pl/blog
 </textarea>
 <script src="assets/remark.js" type="text/javascript"></script>
 <script type="text/javascript">
