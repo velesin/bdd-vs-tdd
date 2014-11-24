@@ -306,7 +306,7 @@ class MarkdownSpec extends ObjectBehavior
 
 - składnia nie ma znaczenia
 - można stosować BDD w PHPUnit!
-- można używać PHPSpec i wcale NIE stosować BDD!
+- można używać Behat'a i wcale NIE stosować BDD!
 ]
 ---
 .left-column[
@@ -344,7 +344,7 @@ Then the shopping cart contains only "milk"
 .left-column[
 ]
 .right-column.left[
-## Korzyści są oczywiste
+## Korzyści
 
 - mniej kruche testy (niezależne od implementacji)
 - weryfikacja spójności wymagań a nie tylko poprawności implementacji
@@ -355,6 +355,10 @@ Then the shopping cart contains only "milk"
 ]
 .right-column.left[
 ## A co z testami jednostkowymi?
+
+- pracują z nimi wyłącznie programiści
+- dotyczą niskopoziomowych detali implementacji
+- czy BDD na takim poziomie ma sens?
 ]
 ---
 .left-column[
@@ -822,16 +826,32 @@ class DartGame_Overscoring_Test {}
 class DartGame_ScoringExactly_Test {}
 ```
 ]
+---
+.left-column[
+]
+.right-column.left[
+## Różnica jest subtelna, ale istotna!
+]
+---
+.left-column[
+]
+.right-column.left[
+## Korzyści
 
+- czytelniejsze testy
+- spójniejsze, czystsze API
+- jasność, które stany systemu są celowe
+]
+---
+.left-column[
+]
+.right-column.left[
+## Na zakończenie
 
-
-
-
-
-
-
-
-
+- BDD to ewolucja TDD
+- nowa składnia to tylko kosmetyka
+- liczy się .red[NOWY SPOSÓB MYŚLENIA]
+]
 ---
 #IT..red[e]SKY.pl/blog
 </textarea>
